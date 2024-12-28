@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MysqlUserService } from './mysql-user.service';
-import { LoggerService } from '@infra/logger/logger.service';
 import { User } from '@infra/datasources/entities/user/user';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Logger } from '@infra/logger/logger';
 
 const loggerMock = {
   error: jest.fn(),
@@ -22,7 +22,7 @@ describe('MysqlUserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MysqlUserService,
-        { provide: LoggerService, useValue: loggerMock },
+        { provide: Logger, useValue: loggerMock },
         {
           provide: getRepositoryToken(User),
           useValue: userRepositoryMock,

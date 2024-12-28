@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { LoggerService } from '@infra/logger/logger.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@infra/datasources/entities/user/user';
 import { Repository } from 'typeorm';
+import { Logger } from '@infra/logger/logger';
 
 @Injectable()
 export class MysqlUserService {
   constructor(
-    private readonly logger: LoggerService,
+    private readonly logger: Logger,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
