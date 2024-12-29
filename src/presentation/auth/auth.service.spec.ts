@@ -3,12 +3,17 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginWithPhoneUseCase } from '@application/auth/login-with-phone-use-case';
 import { LoginDto } from '@presentation/auth/dto/login.dto';
+import { UpdateUserUseCase } from '@application/auth/update-user-use-case';
+import { GetUserUseCase } from '@application/auth/get-user-use-case';
+import { ConfirmUserPhoneUseCase } from '@application/auth/confirm-user-phone-use-case';
 
 describe('AuthService', () => {
   let service: AuthService;
-  const loginWithPhoneUseCase = {
-    execute: jest.fn(),
-  };
+  const loginWithPhoneUseCase = { execute: jest.fn() };
+  const confirmUserPhoneUseCase = { execute: jest.fn() };
+  const getUserUseCase = { execute: jest.fn() };
+  const updateUserUseCase = { execute: jest.fn() };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -16,6 +21,18 @@ describe('AuthService', () => {
         {
           provide: LoginWithPhoneUseCase,
           useValue: loginWithPhoneUseCase,
+        },
+        {
+          provide: ConfirmUserPhoneUseCase,
+          useValue: confirmUserPhoneUseCase,
+        },
+        {
+          provide: UpdateUserUseCase,
+          useValue: updateUserUseCase,
+        },
+        {
+          provide: GetUserUseCase,
+          useValue: getUserUseCase,
         },
       ],
     }).compile();
@@ -62,7 +79,7 @@ describe('AuthService', () => {
 
     expect(result).toEqual({
       status: 202,
-      body: null,
+      body: 'Phone number is not confirmed',
     });
   });
 

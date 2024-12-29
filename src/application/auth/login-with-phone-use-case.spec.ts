@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoginWithPhoneUseCase } from './login-with-phone-use-case';
-import { JwtService } from '@nestjs/jwt';
 import { HttpException } from '@nestjs/common';
 
 describe('LoginWithPhoneUseCase', () => {
@@ -12,6 +11,9 @@ describe('LoginWithPhoneUseCase', () => {
     loginWithPhone: jest.fn(),
     sendSMSCode: jest.fn(),
   };
+  const userRepositoryMock = {
+    updateUser: jest.fn(),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -19,7 +21,8 @@ describe('LoginWithPhoneUseCase', () => {
       providers: [
         LoginWithPhoneUseCase,
         { provide: 'ILoginRepository', useValue: authRepository },
-        { provide: JwtService, useValue: jwtService },
+        { provide: 'IUserRepository', useValue: userRepositoryMock },
+        { provide: 'IJwt', useValue: jwtService },
       ],
     }).compile();
 
@@ -49,13 +52,17 @@ describe('LoginWithPhoneUseCase', () => {
 
   it('should return null', async () => {
     const dto = { phoneNumber: '123456789', uuid: 'uuid' };
-    const error = new HttpException('Conflict', 409);
+    const error = new HttpException(
+      'This user already exists, but you need to confirm your phone number',
+      409,
+      { cause: { user_id: 1 } },
+    );
     authRepository.loginWithPhone.mockRejectedValue(error);
     authRepository.sendSMSCode.mockResolvedValue(null);
 
-    const result = await provider.execute(dto);
+    const result = provider.execute(dto);
 
-    expect(result).toBeNull();
+    await expect(result).rejects.toThrow(error);
   });
 
   it('should throw an error', async () => {

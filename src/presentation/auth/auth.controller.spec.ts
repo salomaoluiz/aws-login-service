@@ -16,6 +16,11 @@ describe('AuthController', () => {
     }),
   } as unknown as Response;
 
+  const jwtServiceMock = {
+    sign: jest.fn(),
+    verify: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -23,6 +28,10 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: authServiceMock,
+        },
+        {
+          provide: 'IJwt',
+          useValue: jwtServiceMock,
         },
       ],
     }).compile();

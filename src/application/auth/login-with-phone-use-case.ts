@@ -111,7 +111,7 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
           await this._handleConflict(dto, cause);
           break;
         default:
-          throw user;
+          throw user.reason;
       }
     }
   }
