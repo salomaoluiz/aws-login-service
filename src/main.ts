@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@presentation/app/app.module';
+import { AppModule } from './app.module';
 import SwaggerSetup from '@infra/swagger/setup';
 import 'reflect-metadata';
 
