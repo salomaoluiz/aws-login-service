@@ -1,0 +1,2 @@
+yarn tsc
+yarn eslint $(git diff --name-only --cached --staged --diff-filter=AM | grep .ts)
