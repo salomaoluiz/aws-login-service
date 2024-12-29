@@ -21,7 +21,7 @@ export class AuthService {
         if (error.getStatus() === HttpStatus.ACCEPTED) {
           return {
             status: HttpStatus.ACCEPTED,
-            body: null,
+            body: error.message,
           };
         }
       }

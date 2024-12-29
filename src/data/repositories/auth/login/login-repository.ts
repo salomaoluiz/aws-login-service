@@ -21,8 +21,18 @@ export class LoginRepository implements ILoginRepository {
       props.phoneNumber,
     );
 
+    if (userModel === null) {
+      throw new HttpException('user-not-found', HttpStatus.NOT_FOUND);
+    }
+
     if (userModel?.uuid !== props.uuid) {
       throw new HttpException('user-not-match', HttpStatus.CONFLICT, {
+        cause: { user_id: userModel.id },
+      });
+    }
+
+    if (userModel.isConfirmed === false) {
+      throw new HttpException('phone-not-confirmed', HttpStatus.UNAUTHORIZED, {
         cause: { user_id: userModel.id },
       });
     }
@@ -32,6 +42,7 @@ export class LoginRepository implements ILoginRepository {
       userModel.name,
       userModel.phone,
       userModel.uuid,
+      userModel.isConfirmed,
     );
   }
 

@@ -16,4 +16,7 @@ export class User {
 
   @Column('text', { nullable: true })
   confirmationCode: string;
+
+  @Column('boolean', { default: false })
+  isConfirmed: boolean;
 }

@@ -16,6 +16,63 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
     private readonly jwtService: JwtService,
   ) {}
 
+  _handleNotFound = async (dto: LoginDto) => {
+    const confirmationCode = await this.authRepository.sendSMSCode(
+      dto.phoneNumber,
+    );
+
+    const user = await this.userRepository.createUser({
+      phoneNumber: dto.phoneNumber,
+      uuid: dto.uuid,
+      confirmationCode,
+    });
+
+    throw new HttpException(
+      {
+        message: 'User created, but you need to confirm your phone number',
+        user_id: user.id,
+      },
+      HttpStatus.ACCEPTED,
+    );
+  };
+
+  _handleUnauthorized = async (dto: LoginDto, cause: { user_id: number }) => {
+    const confirmationCode = await this.authRepository.sendSMSCode(
+      dto.phoneNumber,
+    );
+
+    await this.userRepository.updateUser({
+      id: cause.user_id,
+      confirmationCode,
+    });
+
+    throw new HttpException(
+      {
+        message: 'Phone number not confirmed',
+      },
+      HttpStatus.ACCEPTED,
+    );
+  };
+
+  _handleConflict = async (dto: LoginDto, cause: { user_id: number }) => {
+    const confirmationCode = await this.authRepository.sendSMSCode(
+      dto.phoneNumber,
+    );
+
+    await this.userRepository.updateUser({
+      id: cause.user_id,
+      confirmationCode,
+    });
+
+    throw new HttpException(
+      {
+        message:
+          'This user already exists, but you need to confirm your phone number',
+      },
+      HttpStatus.ACCEPTED,
+    );
+  };
+
   async execute(dto: LoginDto): Promise<LoginEntity | null> {
     const [user] = await Promise.allSettled([
       this.authRepository.loginWithPhone({
@@ -34,29 +91,25 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
       };
     }
 
-    if (
-      user.status === 'rejected' &&
-      (user.reason as HttpException).getStatus() === HttpStatus.CONFLICT
-    ) {
-      const confirmationCode = await this.authRepository.sendSMSCode(
-        dto.phoneNumber,
-      );
+    if (user.status === 'rejected') {
+      const status = (user.reason as HttpException).getStatus();
+      const cause = (user.reason as HttpException).cause as {
+        user_id: number;
+      };
 
-      const cause = (user.reason as HttpException).cause as { user_id: number };
-      await this.userRepository.updateUser({
-        id: cause.user_id,
-        confirmationCode,
-      });
-
-      throw new HttpException(
-        {
-          message: 'Phone number need to be confirmed',
-          user_id: cause.user_id,
-        },
-        HttpStatus.ACCEPTED,
-      );
+      switch (status) {
+        case HttpStatus.UNAUTHORIZED:
+          await this._handleUnauthorized(dto, cause);
+          break;
+        case HttpStatus.NOT_FOUND:
+          await this._handleNotFound(dto);
+          break;
+        case HttpStatus.CONFLICT:
+          await this._handleConflict(dto, cause);
+          break;
+        default:
+          throw user;
+      }
     }
-
-    throw user.reason;
   }
 }

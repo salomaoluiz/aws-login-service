@@ -47,6 +47,7 @@ describe('UserRepository', () => {
       phone: '123456789',
       uuid: '6d108074-0317-4136-9e13-a8bc247355b4',
       confirmationCode: '123456',
+      isConfirmed: false,
     };
     userDataSource.findById.mockResolvedValue(user);
 
@@ -70,6 +71,7 @@ describe('UserRepository', () => {
     const result = await provider.createUser({
       phoneNumber: user.phone,
       uuid: user.uuid,
+      confirmationCode: '123456',
     });
 
     expect(result).toEqual(
@@ -78,6 +80,7 @@ describe('UserRepository', () => {
     expect(userDataSource.createUser).toHaveBeenCalledWith({
       phone: user.phone,
       uuid: user.uuid,
+      confirmationCode: '123456',
     });
   });
 

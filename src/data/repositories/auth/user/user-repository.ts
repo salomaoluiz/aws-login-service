@@ -23,10 +23,12 @@ export class UserRepository implements IUserRepository {
   async createUser(props: {
     phoneNumber: string;
     uuid: string;
+    confirmationCode: string;
   }): Promise<Partial<UserEntity>> {
     const user = await this.userDatasource.createUser({
       phone: props.phoneNumber,
       uuid: props.uuid,
+      confirmationCode: props.confirmationCode,
     });
 
     return new UserEntity(user.id, user.name, user.phone, user.uuid);

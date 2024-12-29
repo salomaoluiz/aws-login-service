@@ -4,16 +4,30 @@ class UserModel {
   phone: string;
   uuid: string;
   confirmationCode: string;
+  isConfirmed: boolean;
 
-  constructor(id: number, name: string, phone: string, uuid: string) {
+  constructor(
+    id: number,
+    name: string,
+    phone: string,
+    uuid: string,
+    isConfirmed: boolean,
+  ) {
     this.id = id;
     this.name = name;
     this.phone = phone;
     this.uuid = uuid;
+    this.isConfirmed = isConfirmed;
   }
 
   static fromJson(data: any): UserModel {
-    return new UserModel(data.id, data.name, data.phone, data.uuid);
+    return new UserModel(
+      data.id,
+      data.name,
+      data.phone,
+      data.uuid,
+      data.isConfirmed,
+    );
   }
 
   static toJson(data: UserModel): any {
@@ -22,6 +36,7 @@ class UserModel {
       name: data.name,
       phone: data.phone,
       uuid: data.uuid,
+      isConfirmed: data.isConfirmed,
     };
   }
 }

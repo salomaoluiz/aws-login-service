@@ -5,6 +5,7 @@ interface IUserRepository {
   createUser(props: {
     phoneNumber: string;
     uuid: string;
+    confirmationCode: string;
   }): Promise<Partial<UserEntity>>;
   updateUser(user: Partial<UserEntity>): Promise<Partial<UserEntity>>;
 }
