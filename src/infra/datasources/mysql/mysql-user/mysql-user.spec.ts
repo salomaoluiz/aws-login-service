@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MysqlUserService } from './mysql-user.service';
+import { MysqlUser } from './mysql-user';
 import { User } from '@infra/datasources/entities/user/user';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Logger } from '@infra/logger/logger';
@@ -16,12 +16,12 @@ const userRepositoryMock = {
 };
 
 describe('MysqlUserService', () => {
-  let service: MysqlUserService;
+  let service: MysqlUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        MysqlUserService,
+        MysqlUser,
         { provide: Logger, useValue: loggerMock },
         {
           provide: getRepositoryToken(User),
@@ -30,7 +30,7 @@ describe('MysqlUserService', () => {
       ],
     }).compile();
 
-    service = module.get<MysqlUserService>(MysqlUserService);
+    service = module.get<MysqlUser>(MysqlUser);
   });
 
   it('should be defined', () => {
@@ -55,6 +55,12 @@ describe('MysqlUserService', () => {
     expect(userRepositoryMock.delete).toHaveBeenCalledWith({ id: 1 });
   });
 
+  it('should call findByPhoneNumber method', async () => {
+    userRepositoryMock.findOneBy.mockResolvedValueOnce({});
+    const result = await service.findByPhoneNumber('123');
+    expect(result).toEqual({});
+  });
+
   it('should call save method', async () => {
     userRepositoryMock.save.mockResolvedValueOnce({});
     const result = await service.createUser({ name: 'test' });
@@ -69,6 +75,19 @@ describe('MysqlUserService', () => {
     await expect(promise).rejects.toEqual(error);
     expect(loggerMock.error).toHaveBeenCalledWith(
       'Error on find all users',
+      error,
+    );
+  });
+
+  it('should call error on find user by phone number', async () => {
+    const error = new Error('Something wrong in find user by phone number');
+    userRepositoryMock.findOneBy.mockRejectedValueOnce(error);
+
+    const promise = service.findByPhoneNumber('123');
+
+    await expect(promise).rejects.toEqual(error);
+    expect(loggerMock.error).toHaveBeenCalledWith(
+      'Error on find user by phone number',
       error,
     );
   });
