@@ -29,6 +29,6 @@ export class AuthPipe implements PipeTransform {
       throw new HttpException('Invalid uuid', HttpStatus.BAD_REQUEST);
     }
 
-    return true;
+    return value;
   }
 }

@@ -6,7 +6,7 @@ interface ILoginRepository {
     uuid: string;
   }): Promise<UserEntity>;
 
-  sendSMSCode(phoneNumber: string): Promise<void>;
+  sendSMSCode(phoneNumber: string): Promise<string>;
 }
 
 export default ILoginRepository;

@@ -3,6 +3,7 @@ class UserModel {
   name: string;
   phone: string;
   uuid: string;
+  confirmationCode: string;
 
   constructor(id: number, name: string, phone: string, uuid: string) {
     this.id = id;

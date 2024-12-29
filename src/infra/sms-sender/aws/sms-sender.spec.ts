@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AWSSMSSender } from './sms-sender';
-import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
+import { SNSClient } from '@aws-sdk/client-sns';
 
 describe('AWSSMSSender', () => {
   let provider: AWSSMSSender;

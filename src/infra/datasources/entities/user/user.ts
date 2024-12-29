@@ -13,4 +13,7 @@ export class User {
 
   @Column('uuid')
   uuid: string;
+
+  @Column('text', { nullable: true })
+  confirmationCode: string;
 }

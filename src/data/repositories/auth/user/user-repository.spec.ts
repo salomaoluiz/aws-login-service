@@ -46,6 +46,7 @@ describe('UserRepository', () => {
       name: 'name',
       phone: '123456789',
       uuid: '6d108074-0317-4136-9e13-a8bc247355b4',
+      confirmationCode: '123456',
     };
     userDataSource.findById.mockResolvedValue(user);
 

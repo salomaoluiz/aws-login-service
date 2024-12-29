@@ -22,7 +22,9 @@ export class LoginRepository implements ILoginRepository {
     );
 
     if (userModel?.uuid !== props.uuid) {
-      throw new HttpException('user-not-found', HttpStatus.CONFLICT);
+      throw new HttpException('user-not-match', HttpStatus.CONFLICT, {
+        cause: { user_id: userModel.id },
+      });
     }
 
     return new UserEntity(
@@ -33,7 +35,7 @@ export class LoginRepository implements ILoginRepository {
     );
   }
 
-  async sendSMSCode(phoneNumber: string): Promise<void> {
+  async sendSMSCode(phoneNumber: string): Promise<string> {
     return await this.loginDatasource.sendSMS(phoneNumber);
   }
 }

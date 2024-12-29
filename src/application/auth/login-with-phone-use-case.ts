@@ -4,6 +4,7 @@ import { LoginWithPhoneEntity } from '@presentation/auth/entities/login-with-pho
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import ILoginRepository from '@domain/repositories/auth/login-repository';
+import IUserRepository from '@domain/repositories/auth/user-repository';
 
 @Injectable()
 export class LoginWithPhoneUseCase
@@ -12,6 +13,8 @@ export class LoginWithPhoneUseCase
   constructor(
     @Inject('ILoginRepository')
     private readonly authRepository: ILoginRepository,
+    @Inject('IUserRepository')
+    private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -37,7 +40,16 @@ export class LoginWithPhoneUseCase
       user.status === 'rejected' &&
       (user.reason as HttpException).getStatus() === HttpStatus.CONFLICT
     ) {
-      await this.authRepository.sendSMSCode(dto.phoneNumber);
+      const confirmationCode = await this.authRepository.sendSMSCode(
+        dto.phoneNumber,
+      );
+
+      const cause = (user.reason as HttpException).cause as { user_id: number };
+      await this.userRepository.updateUser({
+        id: cause.user_id,
+        confirmationCode,
+      });
+
       return null;
     }
 
