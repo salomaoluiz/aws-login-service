@@ -4,7 +4,7 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { LoginWithPhoneDto } from '@presentation/auth/dto/login-with-phone.dto';
+import { LoginDto } from '@presentation/auth/dto/login.dto';
 import { validate } from 'uuid';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthPipe implements PipeTransform {
     return validate(uuid);
   }
 
-  transform(value: LoginWithPhoneDto) {
+  transform(value: LoginDto) {
     if (!this._validatePhoneNumber(value.phoneNumber)) {
       throw new HttpException(
         "Invalid phone number, follow the pattern '5544911112222'",

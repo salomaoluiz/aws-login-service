@@ -1,15 +1,13 @@
 import { IUseCase } from '@application/use-case';
-import { LoginWithPhoneDto } from '@presentation/auth/dto/login-with-phone.dto';
-import { LoginWithPhoneEntity } from '@presentation/auth/entities/login-with-phone.entity';
+import { LoginDto } from '@presentation/auth/dto/login.dto';
+import { LoginEntity } from '@presentation/auth/entities/login.entity';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import ILoginRepository from '@domain/repositories/auth/login-repository';
 import IUserRepository from '@domain/repositories/auth/user-repository';
 
 @Injectable()
-export class LoginWithPhoneUseCase
-  implements IUseCase<LoginWithPhoneDto, LoginWithPhoneEntity>
-{
+export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
   constructor(
     @Inject('ILoginRepository')
     private readonly authRepository: ILoginRepository,
@@ -18,7 +16,7 @@ export class LoginWithPhoneUseCase
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(dto: LoginWithPhoneDto): Promise<LoginWithPhoneEntity | null> {
+  async execute(dto: LoginDto): Promise<LoginEntity | null> {
     const [user] = await Promise.allSettled([
       this.authRepository.loginWithPhone({
         phoneNumber: dto.phoneNumber,
