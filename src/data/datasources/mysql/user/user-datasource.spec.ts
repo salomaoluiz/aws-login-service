@@ -53,6 +53,7 @@ describe('User', () => {
     const user = {
       phone: '5544987961234',
       uuid: '16e57b6a-2067-4b51-b007-9e7baf3d4221',
+      confirmationCode: '1234',
     };
     mysqlUserRepositoryMock.createUser.mockResolvedValueOnce({
       id: 1,

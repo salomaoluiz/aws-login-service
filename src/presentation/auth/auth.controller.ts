@@ -1,8 +1,9 @@
+import { Response } from 'express';
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { AuthPipe } from '@presentation/auth/auth.pipe';
-import { Response } from 'express';
+import { AuthPipe } from './auth.pipe';
+import { ConfirmDto } from './dto/confirm.dto';
 
 @Controller('users')
 export class AuthController {
@@ -14,6 +15,13 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const result = await this.authService.login(loginWithPhoneDto);
+
+    return res.status(result.status).json(result.body).send();
+  }
+
+  @Post('/confirm')
+  async confirm(@Body() confirmDto: ConfirmDto, @Res() res: Response) {
+    const result = await this.authService.confirm(confirmDto);
 
     return res.status(result.status).json(result.body).send();
   }

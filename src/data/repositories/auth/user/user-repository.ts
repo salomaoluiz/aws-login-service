@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import IUserRepository from '@domain/repositories/auth/user-repository';
 import UserEntity from '@domain/entities/user';
 import IUserDatasource from '@data/repositories/auth/user/user-datasource';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -14,10 +15,34 @@ export class UserRepository implements IUserRepository {
     const user = await this.userDatasource.findById(id);
 
     if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return new UserEntity({
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      uuid: user.uuid,
+      isConfirmed: user.isConfirmed,
+      confirmationCode: user.confirmationCode,
+    });
+  }
+
+  async findByPhoneNumber(phoneNumber: string): Promise<UserEntity | null> {
+    const user = await this.userDatasource.findByPhoneNumber(phoneNumber);
+
+    if (!user) {
       return null;
     }
 
-    return new UserEntity(user.id, user.name, user.phone, user.uuid);
+    return new UserEntity({
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      uuid: user.uuid,
+      isConfirmed: user.isConfirmed,
+      confirmationCode: user.confirmationCode,
+    });
   }
 
   async createUser(props: {
@@ -31,17 +56,26 @@ export class UserRepository implements IUserRepository {
       confirmationCode: props.confirmationCode,
     });
 
-    return new UserEntity(user.id, user.name, user.phone, user.uuid);
+    return new UserEntity({
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      uuid: user.uuid,
+      isConfirmed: user.isConfirmed,
+      confirmationCode: user.confirmationCode,
+    });
   }
 
   async updateUser(user: Partial<UserEntity>): Promise<Partial<UserEntity>> {
     const updatedUser = await this.userDatasource.updateUser(user);
 
-    return new UserEntity(
-      updatedUser.id,
-      updatedUser.name,
-      updatedUser.phone,
-      updatedUser.uuid,
-    );
+    return new UserEntity({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      phone: updatedUser.phone,
+      uuid: updatedUser.uuid,
+      isConfirmed: updatedUser.isConfirmed,
+      confirmationCode: updatedUser.confirmationCode,
+    });
   }
 }

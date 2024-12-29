@@ -6,28 +6,31 @@ class UserModel {
   confirmationCode: string;
   isConfirmed: boolean;
 
-  constructor(
-    id: number,
-    name: string,
-    phone: string,
-    uuid: string,
-    isConfirmed: boolean,
-  ) {
-    this.id = id;
-    this.name = name;
-    this.phone = phone;
-    this.uuid = uuid;
-    this.isConfirmed = isConfirmed;
+  constructor(props: {
+    id: number;
+    name: string;
+    phone: string;
+    uuid: string;
+    isConfirmed: boolean;
+    confirmationCode: string;
+  }) {
+    this.id = props.id;
+    this.name = props.name;
+    this.phone = props.phone;
+    this.uuid = props.uuid;
+    this.confirmationCode = props.confirmationCode;
+    this.isConfirmed = props.isConfirmed;
   }
 
   static fromJson(data: any): UserModel {
-    return new UserModel(
-      data.id,
-      data.name,
-      data.phone,
-      data.uuid,
-      data.isConfirmed,
-    );
+    return new UserModel({
+      id: data.id,
+      name: data.name,
+      phone: data.phone,
+      uuid: data.uuid,
+      confirmationCode: data.confirmationCode,
+      isConfirmed: data.isConfirmed,
+    });
   }
 
   static toJson(data: UserModel): any {

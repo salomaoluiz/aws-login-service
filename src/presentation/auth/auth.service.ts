@@ -2,10 +2,15 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 import { LoginDto } from './dto/login.dto';
 import { LoginWithPhoneUseCase } from '@application/auth/login-with-phone-use-case';
+import { ConfirmUserPhoneUseCase } from '@application/auth/confirm-user-phone-use-case';
+import { ConfirmDto } from '@presentation/auth/dto/confirm.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly loginWithPhoneUseCase: LoginWithPhoneUseCase) {}
+  constructor(
+    private readonly loginWithPhoneUseCase: LoginWithPhoneUseCase,
+    private readonly confirmUserPhoneUseCase: ConfirmUserPhoneUseCase,
+  ) {}
 
   async login(loginWithPhoneDto: LoginDto) {
     try {
@@ -28,5 +33,14 @@ export class AuthService {
 
       throw error;
     }
+  }
+
+  async confirm(confirmDto: ConfirmDto) {
+    await this.confirmUserPhoneUseCase.execute(confirmDto);
+
+    return {
+      status: HttpStatus.OK,
+      body: 'Phone number confirmed',
+    };
   }
 }

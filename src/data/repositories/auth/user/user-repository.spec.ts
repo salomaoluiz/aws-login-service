@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserRepository } from './user-repository';
 import IUserDatasource from '@data/repositories/auth/user/user-datasource';
 import UserEntity from '@domain/entities/user';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('UserRepository', () => {
   let provider: UserRepository;
@@ -30,14 +31,16 @@ describe('UserRepository', () => {
     expect(provider).toBeDefined();
   });
 
-  it('should call userDataSource.findById AND return null IF user is not found', async () => {
+  it('should call userDataSource.findById AND return throw IF user is not found', async () => {
     const id = 1;
+    const error = new HttpException('User not found', HttpStatus.NOT_FOUND);
+
     userDataSource.findById.mockResolvedValue(null);
 
-    const result = await provider.findById(id);
+    const result = provider.findById(id);
 
-    expect(result).toBeNull();
     expect(userDataSource.findById).toHaveBeenCalledWith(id);
+    expect(result).rejects.toThrow(error);
   });
 
   it('should call userDataSource.findById AND return UserEntity IF user is found', async () => {
@@ -54,7 +57,14 @@ describe('UserRepository', () => {
     const result = await provider.findById(user.id);
 
     expect(result).toEqual(
-      new UserEntity(user.id, user.name, user.phone, user.uuid),
+      new UserEntity({
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        uuid: user.uuid,
+        confirmationCode: user.confirmationCode,
+        isConfirmed: user.isConfirmed,
+      }),
     );
     expect(userDataSource.findById).toHaveBeenCalledWith(user.id);
   });
@@ -75,7 +85,12 @@ describe('UserRepository', () => {
     });
 
     expect(result).toEqual(
-      new UserEntity(user.id, user.name, user.phone, user.uuid),
+      new UserEntity({
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        uuid: user.uuid,
+      }),
     );
     expect(userDataSource.createUser).toHaveBeenCalledWith({
       phone: user.phone,
@@ -91,7 +106,12 @@ describe('UserRepository', () => {
     const result = await provider.updateUser(user);
 
     expect(result).toEqual(
-      new UserEntity(user.id, user.name, user.phone, user.uuid),
+      new UserEntity({
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        uuid: user.uuid,
+      }),
     );
     expect(userDataSource.updateUser).toHaveBeenCalledWith(user);
   });

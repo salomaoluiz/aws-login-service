@@ -7,6 +7,6 @@ import { ConfirmUserPhoneUseCase } from './confirm-user-phone-use-case';
 @Module({
   imports: [JwtModule, DataModule],
   providers: [LoginWithPhoneUseCase, ConfirmUserPhoneUseCase],
-  exports: [LoginWithPhoneUseCase],
+  exports: [LoginWithPhoneUseCase, ConfirmUserPhoneUseCase],
 })
 export class ApplicationAuthModule {}

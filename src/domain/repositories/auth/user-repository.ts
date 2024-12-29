@@ -2,6 +2,7 @@ import UserEntity from '@domain/entities/user';
 
 interface IUserRepository {
   findById(id: number): Promise<UserEntity | null>;
+  findByPhoneNumber(phoneNumber: string): Promise<UserEntity | null>;
   createUser(props: {
     phoneNumber: string;
     uuid: string;

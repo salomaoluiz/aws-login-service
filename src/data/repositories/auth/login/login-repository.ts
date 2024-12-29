@@ -37,13 +37,14 @@ export class LoginRepository implements ILoginRepository {
       });
     }
 
-    return new UserEntity(
-      userModel.id,
-      userModel.name,
-      userModel.phone,
-      userModel.uuid,
-      userModel.isConfirmed,
-    );
+    return new UserEntity({
+      id: userModel.id,
+      name: userModel.name,
+      phone: userModel.phone,
+      uuid: userModel.uuid,
+      isConfirmed: userModel.isConfirmed,
+      confirmationCode: userModel.confirmationCode,
+    });
   }
 
   async sendSMSCode(phoneNumber: string): Promise<string> {

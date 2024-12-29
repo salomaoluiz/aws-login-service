@@ -31,11 +31,13 @@ export class UserDatasource implements IUserDatasource {
   async createUser(props: {
     phone: string;
     uuid: string;
+    confirmationCode: string;
   }): Promise<Partial<UserModel>> {
     const newUser = new User();
 
     newUser.phone = props.phone;
     newUser.uuid = props.uuid;
+    newUser.confirmationCode = props.confirmationCode;
 
     const userCreated = await this.mysqlUserRepository.createUser(newUser);
 
@@ -49,6 +51,8 @@ export class UserDatasource implements IUserDatasource {
     userToUpdate.uuid = user.uuid;
     userToUpdate.name = user.name;
     userToUpdate.id = user.id;
+    userToUpdate.isConfirmed = user.isConfirmed;
+    userToUpdate.confirmationCode = user.confirmationCode;
 
     const userUpdated = await this.mysqlUserRepository.update(userToUpdate);
     return UserModel.fromJson(userUpdated);
