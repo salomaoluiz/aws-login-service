@@ -4,6 +4,7 @@ import { LoginWithPhoneUseCase } from './login-with-phone-use-case';
 import { ConfirmUserPhoneUseCase } from './confirm-user-phone-use-case';
 import { JwtModule } from '@infra/jwt/jwt.module';
 import { UpdateUserUseCase } from './update-user-use-case';
+import { GetUserUseCase } from './get-user-use-case';
 
 @Module({
   imports: [JwtModule, DataModule],
@@ -11,7 +12,13 @@ import { UpdateUserUseCase } from './update-user-use-case';
     LoginWithPhoneUseCase,
     ConfirmUserPhoneUseCase,
     UpdateUserUseCase,
+    GetUserUseCase,
   ],
-  exports: [LoginWithPhoneUseCase, ConfirmUserPhoneUseCase, UpdateUserUseCase],
+  exports: [
+    LoginWithPhoneUseCase,
+    ConfirmUserPhoneUseCase,
+    UpdateUserUseCase,
+    GetUserUseCase,
+  ],
 })
 export class ApplicationAuthModule {}

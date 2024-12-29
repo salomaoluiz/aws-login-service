@@ -6,6 +6,7 @@ import { ConfirmUserPhoneUseCase } from '@application/auth/confirm-user-phone-us
 import { ConfirmDto } from '@presentation/auth/dto/confirm.dto';
 import { UpdateDto } from '@presentation/auth/dto/update.dto';
 import { UpdateUserUseCase } from '@application/auth/update-user-use-case';
+import { GetUserUseCase } from '@application/auth/get-user-use-case';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly loginWithPhoneUseCase: LoginWithPhoneUseCase,
     private readonly confirmUserPhoneUseCase: ConfirmUserPhoneUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly getUserUseCase: GetUserUseCase,
   ) {}
 
   async login(loginWithPhoneDto: LoginDto) {
@@ -70,5 +72,14 @@ export class AuthService {
 
       throw error;
     }
+  }
+
+  async getUser(userId: number) {
+    const result = await this.getUserUseCase.execute(userId);
+
+    return {
+      status: HttpStatus.OK,
+      body: result,
+    };
   }
 }

@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   Body,
+  Get,
   Res,
   UseGuards,
   Put,
@@ -28,6 +29,18 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const result = await this.authService.login(loginWithPhoneDto);
+
+    return res.status(result.status).json(result.body).send();
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @Get('/')
+  async getUser(
+    @Res() res: Response,
+    @Req() req: Request & { user: { user_id: number } },
+  ) {
+    const result = await this.authService.getUser(req.user.user_id);
 
     return res.status(result.status).json(result.body).send();
   }
