@@ -48,7 +48,13 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
         confirmationCode,
       });
 
-      return null;
+      throw new HttpException(
+        {
+          message: 'Phone number need to be confirmed',
+          user_id: cause.user_id,
+        },
+        HttpStatus.ACCEPTED,
+      );
     }
 
     throw user.reason;
