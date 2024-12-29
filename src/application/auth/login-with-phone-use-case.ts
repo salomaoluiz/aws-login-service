@@ -2,9 +2,9 @@ import { IUseCase } from '@application/use-case';
 import { LoginDto } from '@presentation/auth/dto/login.dto';
 import { LoginEntity } from '@presentation/auth/entities/login.entity';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import ILoginRepository from '@domain/repositories/auth/login-repository';
 import IUserRepository from '@domain/repositories/auth/user-repository';
+import IJwt from '@infra/jwt/jwt';
 
 @Injectable()
 export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
@@ -13,7 +13,8 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
     private readonly authRepository: ILoginRepository,
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
-    private readonly jwtService: JwtService,
+    @Inject('IJwt')
+    private readonly jwtService: IJwt,
   ) {}
 
   _handleNotFound = async (dto: LoginDto) => {
@@ -83,11 +84,11 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
 
     if (user.status === 'fulfilled') {
       return {
-        access_token: this.jwtService.sign(
-          { id: user.value.id },
-          { expiresIn: '1d' },
+        access_token: this.jwtService.sign({ user_id: user.value.id }),
+        refresh_token: this.jwtService.sign(
+          { user_id: user.value.id },
+          { expires_in: '7d' },
         ),
-        refresh_token: this.jwtService.sign({ id: user.value.id }),
       };
     }
 

@@ -36,4 +36,12 @@ export class ConfigService {
   get AWS_SECRET_ACCESS_KEY(): string {
     return this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
   }
+
+  get JWT_SECRET(): string {
+    return this.configService.get<string>('JWT_SECRET');
+  }
+
+  get JWT_EXPIRES_IN(): string {
+    return this.configService.get<string>('JWT_EXPIRES_IN');
+  }
 }
