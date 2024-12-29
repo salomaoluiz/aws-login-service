@@ -7,6 +7,7 @@ class SwaggerSetup {
       .setTitle('API Documentation')
       .setDescription('This is the documentation of ')
       .setVersion('1.0')
+      .addBearerAuth()
       .build();
 
     const documentFactory = () => SwaggerModule.createDocument(app, config);

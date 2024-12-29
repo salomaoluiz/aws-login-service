@@ -18,10 +18,12 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@src/*": ["./src/*"],
       "@infra/*": ["./src/infra/*"],
       "@data/*": ["./src/data/*"],
       "@domain/*": ["./src/domain/*"],
       "@presentation/*": ["./src/presentation/*"],
+      "@interceptors/*": ["./src/interceptors/*"],
       "@utils/*": ["./src/utils/*"],
       "@application/*": ["./src/application/*"]
     }

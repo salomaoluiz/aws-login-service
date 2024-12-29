@@ -62,7 +62,9 @@ export class LoginWithPhoneUseCase implements IUseCase<LoginDto, LoginEntity> {
 
     await this.userRepository.updateUser({
       id: cause.user_id,
+      uuid: dto.uuid,
       confirmationCode,
+      isConfirmed: false,
     });
 
     throw new HttpException(

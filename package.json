@@ -81,6 +81,8 @@
     ],
     "testEnvironment": "node",
     "moduleNameMapper": {
+      "^@src/(.*)$": "<rootDir>/src/$1",
+      "^@interceptors/(.*)$": "<rootDir>/interceptors/$1",
       "^@infra/(.*)$": "<rootDir>/infra/$1",
       "^@data/(.*)$": "<rootDir>/data/$1",
       "^@domain/(.*)$": "<rootDir>/domain/$1",
