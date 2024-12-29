@@ -8,7 +8,7 @@ import { LoginDto } from '@presentation/auth/dto/login.dto';
 import { validate } from 'uuid';
 
 @Injectable()
-export class AuthPipe implements PipeTransform {
+export class LoginPipe implements PipeTransform {
   _validatePhoneNumber(phoneNumber: string): boolean {
     return phoneNumber.match(/\d/g)?.length === 13;
   }

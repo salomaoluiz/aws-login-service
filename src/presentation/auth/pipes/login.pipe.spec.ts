@@ -1,9 +1,9 @@
-import { AuthPipe } from './auth.pipe';
+import { LoginPipe } from './login.pipe';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('AuthPipe', () => {
   it('should be defined', () => {
-    expect(new AuthPipe()).toBeDefined();
+    expect(new LoginPipe()).toBeDefined();
   });
 
   it('should validate phone number', () => {
@@ -12,7 +12,7 @@ describe('AuthPipe', () => {
       uuid: '123e4567-e89b-12d3-a456-426614174000',
     };
 
-    const pipe = new AuthPipe();
+    const pipe = new LoginPipe();
 
     expect(pipe.transform(loginWithPhoneDto)).toBeTruthy();
   });
@@ -23,7 +23,7 @@ describe('AuthPipe', () => {
       uuid: '123e4567-e891-12d3-a456-426614174000',
     };
 
-    const pipe = new AuthPipe();
+    const pipe = new LoginPipe();
 
     expect(pipe.transform(loginWithPhoneDto)).toBeTruthy();
   });
@@ -34,7 +34,7 @@ describe('AuthPipe', () => {
       uuid: '123e4567-e892-12d3-a456-426614174000',
     };
 
-    const pipe = new AuthPipe();
+    const pipe = new LoginPipe();
 
     expect(() => pipe.transform(loginWithPhoneDto)).toThrow(
       new HttpException(
@@ -50,7 +50,7 @@ describe('AuthPipe', () => {
       uuid: '1123',
     };
 
-    const pipe = new AuthPipe();
+    const pipe = new LoginPipe();
 
     expect(() => pipe.transform(loginWithPhoneDto)).toThrow(
       new HttpException('Invalid uuid', HttpStatus.BAD_REQUEST),
