@@ -1,3 +1,8 @@
+# Links
+[Video URL](https://www.youtube.com/watch?v=Vcs_5FGAwsY)\
+[AWS APP Repo](https://github.com/salomaoluiz/aws-login-app)
+
+<br><br><br><br><br><br>
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
